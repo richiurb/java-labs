@@ -3,8 +3,8 @@ package md2html;
 public class MdLinkNode extends MdNode {
     public StringBuilder url;
 
-    // Stage 0 - обработка текста ссылки из квадратных скобок
-    // Stage 1 - обработка URL из круглых скобок
+    // Stage 0 - processing link text found in square brackets
+    // Stage 1 - processing URL found in round brackets
     public int stage;
 
     public MdLinkNode() {

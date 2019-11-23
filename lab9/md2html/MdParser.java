@@ -1,6 +1,5 @@
 package md2html;
 
-import java.io.*;
 import java.util.*;
 
 public class MdParser {
@@ -37,66 +36,52 @@ public class MdParser {
         return (MdRootNode) rootNode;
     }
 
-    public void parseLine(String line) throws IOException {
-        // Возврат к корневой ноде на пустой строке
+    public void parseLine(String line) {
+        // Returning to the root node on blank line
         if (line.isBlank()) {
             currentNode = rootNode;
             return;
         }
 
         lineCharIndex = 0;
+        sb = new StringBuilder();
 
         if (currentNode.type == MdNodeType.ROOT) {
-            // При нахождении в рутовой ноде добавляем либо заголовок, либо параграф
-            if (!checkHeading(line)) {
+            // If in the root node then add heading or paragraph
+            lineCharIndex = checkHeading(line);
+
+            if (lineCharIndex == 0) {
                 currentNode = currentNode.addNode(new MdParagraphNode());
             }
         }
 
-        sb = new StringBuilder();
-
         for (; lineCharIndex < line.length(); lineCharIndex++) {
-            parseNextChar(line);
+            processNextChar(line);
         }
 
-        // Обрабатываем окончание строки
         if (sb.length() > 0) {
-            if (currentNode.type == MdNodeType.LINK) {
-                MdLinkNode linkNode = (MdLinkNode) currentNode;
-
-                if (linkNode.stage == 0) {
-                    MdNode newNode = currentNode.addNode(new MdTextNode(sb.toString()));
-                    newNode.isLineEnd = true;
-                }
-
-                if (linkNode.stage == 1) {
-                    linkNode.url.append(sb.toString() + '\n');
-                }
-            } else {
-                MdNode newNode = currentNode.addNode(new MdTextNode(sb.toString()));
-                newNode.isLineEnd = true;
-            }
+            processLineEnding();
         }
     }
 
-    private void parseNextChar(String line) {
+    private void processNextChar(String line) {
         char c = line.charAt(lineCharIndex);
 
         if (!isControlChar(c)) {
-            // Начинаем обработку ссылки
+            // Starting link processing
             if (c == '[') {
-                sb = saveAndClearText(sb);
+                saveAndClearStringBuilder();
                 currentNode = currentNode.addNode(new MdLinkNode());
                 return;
             }
 
-            // Переходим на второй этап обработки ссылки
+            // Go to the second stage of the link processing
             if (c == ']' && currentNode.type == MdNodeType.LINK) {
-                sb = saveAndClearText(sb);
+                saveAndClearStringBuilder();
                 ((MdLinkNode) currentNode).stage++;
                 lineCharIndex += 1;
             } else if (currentNode.type == MdNodeType.LINK) {
-                // Завершаем обработку ссылки
+                // End the link processing
                 if (c == ')') {
                     ((MdLinkNode) currentNode).url.append(sb.toString());
                     sb = new StringBuilder();
@@ -160,34 +145,40 @@ public class MdParser {
             return;
         }
 
-        sb = saveAndClearText(sb);
+        saveAndClearStringBuilder();
 
         if (currentNode.type == MdNodeType.STYLE && ((MdStyleNode)currentNode).styleType == styleNodeType) {
-
-            // Обрабатываем выход из styleNode
+            // Processing end of the style node
             if (lineCharIndex == line.length() - 1) {
                 currentNode.isLineEnd = true;
             }
 
             currentNode = currentNode.parent;
         } else {
-
-            // Обрабатываем вход в styleNode
+            // Processing start of the style node
             currentNode = currentNode.addNode(new MdStyleNode(styleNodeType));
         }
     }
 
-    private boolean checkHeading(String line) {
+    private void processLineEnding() {
+        if (currentNode.type == MdNodeType.LINK && ((MdLinkNode) currentNode).stage == 1) {
+            ((MdLinkNode) currentNode).url.append(sb.toString() + '\n');
+        } else {
+            MdNode newNode = currentNode.addNode(new MdTextNode(sb.toString()));
+            newNode.isLineEnd = true;
+        }
+    }
+
+    private int checkHeading(String line) {
         int level = getHeadingLevel(line);
 
-        // Если уровень заголовка равен 0, значит заголовка нет
+        // If the heading level equals to 0 then heading does not exist
         if (level > 0) {
             currentNode = currentNode.addNode(new MdHeadingNode(level));
-            lineCharIndex = level + 1;
-            return true;
+            return level + 1;
         }
 
-        return false;
+        return 0;
     }
 
     private int getHeadingLevel(String line) {
@@ -221,12 +212,12 @@ public class MdParser {
         return false;
     }
 
-    private StringBuilder saveAndClearText(StringBuilder sb) {
+    private void saveAndClearStringBuilder() {
         if (sb.length() == 0) {   
-            return sb;           
+            return;           
         }
 
         currentNode.addNode(new MdTextNode(sb.toString()));
-        return new StringBuilder();
+        sb = new StringBuilder();
     }
 }
