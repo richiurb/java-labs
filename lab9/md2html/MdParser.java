@@ -7,6 +7,7 @@ public class MdParser {
 
     private MdNode rootNode;
     private MdNode currentNode;
+    private String line;
     private int lineCharIndex;
     private StringBuilder sb;
 
@@ -43,8 +44,9 @@ public class MdParser {
             return;
         }
 
-        lineCharIndex = 0;
-        sb = new StringBuilder();
+        this.line = line;
+        this.lineCharIndex = 0;
+        this.sb = new StringBuilder();
 
         if (currentNode.type == MdNodeType.ROOT) {
             // If in the root node then add heading or paragraph
@@ -56,7 +58,7 @@ public class MdParser {
         }
 
         for (; lineCharIndex < line.length(); lineCharIndex++) {
-            processNextChar(line);
+            processNextChar();
         }
 
         if (sb.length() > 0) {
@@ -64,66 +66,78 @@ public class MdParser {
         }
     }
 
-    private void processNextChar(String line) {
+    private void processNextChar() {
         char c = line.charAt(lineCharIndex);
 
         if (!isControlChar(c)) {
-            // Starting link processing
-            if (c == '[') {
-                saveAndClearStringBuilder();
-                currentNode = currentNode.addNode(new MdLinkNode());
-                return;
+            processNonControlCharacter(c);
+        } else if (isInLinkFirstStage()) {
+            sb.append(c);
+        } else {
+            if (c == '\\') {
+                processEscapeCharacter(c);
+            } else {
+                processStyleCharacter(c);
             }
+        }
+    }
 
-            // Go to the second stage of the link processing
-            if (c == ']' && currentNode.type == MdNodeType.LINK) {
-                saveAndClearStringBuilder();
-                ((MdLinkNode) currentNode).stage++;
-                lineCharIndex += 1;
-            } else if (currentNode.type == MdNodeType.LINK) {
-                // End the link processing
-                if (c == ')') {
+    private void processLineEnding() {
+        if (isInLinkFirstStage()) {
+            ((MdLinkNode) currentNode).url.append(sb.toString() + '\n');
+        } else {
+            MdNode newNode = currentNode.addNode(new MdTextNode(sb.toString()));
+            newNode.isLineEnd = true;
+        }
+    }
+
+    private void processNonControlCharacter(char c) {
+        if (c == '[') {
+            saveAndClearStringBuilder();
+            currentNode = currentNode.addNode(new MdLinkNode());
+        } else if (currentNode.type == MdNodeType.LINK) {
+            switch (c) {
+                case ']':
+                    saveAndClearStringBuilder();
+                    ((MdLinkNode) currentNode).stage++;
+                    lineCharIndex += 1;
+                    break;
+                case ')':
                     ((MdLinkNode) currentNode).url.append(sb.toString());
                     sb = new StringBuilder();
                     currentNode.isLineEnd = line.length() - 1 == lineCharIndex;
-                    currentNode = currentNode.parent;
-                } else {
+                    currentNode = currentNode.parent; 
+                    break;
+                default:
                     sb.append(c);
-                }
-            } else {
-                String htmlChar = htmlSymbolsMapping.get(c);
-                if (htmlChar != null) {
-                    sb.append(htmlChar);
-                } else {
-                    sb.append(c);
-                }
             }
+        } else {
+            String htmlChar = htmlSymbolsMapping.get(c);
 
-            return;
-        }
-
-        if (currentNode.type == MdNodeType.LINK && ((MdLinkNode) currentNode).stage == 1) {
-            sb.append(c);
-            return;
-        }
-
-        if (c == '\\') {
-            int nextCharIndex = lineCharIndex + 1;
-
-            if (nextCharIndex != line.length()) {
-                char nextChar = line.charAt(nextCharIndex);
-
-                if (isControlChar(nextChar)) {
-                    sb.append(nextChar);
-                    lineCharIndex++;
-                }
+            if (htmlChar != null) {
+                sb.append(htmlChar);
             } else {
                 sb.append(c);
             }
-
-            return;
         }
+    }
 
+    private void processEscapeCharacter(char c) {
+        int nextCharIndex = lineCharIndex + 1;
+
+        if (nextCharIndex != line.length()) {
+            char nextChar = line.charAt(nextCharIndex);
+
+            if (isControlChar(nextChar)) {
+                sb.append(nextChar);
+                lineCharIndex++;
+            }
+        } else {
+            sb.append(c);
+        }
+    }
+
+    private void processStyleCharacter(char c) {
         String ctrlString = Character.toString(c);
         int nextCharIndex = lineCharIndex + 1;
         char nextChar = nextCharIndex == line.length() ? 0 : line.charAt(nextCharIndex);
@@ -159,16 +173,7 @@ public class MdParser {
             currentNode = currentNode.addNode(new MdStyleNode(styleNodeType));
         }
     }
-
-    private void processLineEnding() {
-        if (currentNode.type == MdNodeType.LINK && ((MdLinkNode) currentNode).stage == 1) {
-            ((MdLinkNode) currentNode).url.append(sb.toString() + '\n');
-        } else {
-            MdNode newNode = currentNode.addNode(new MdTextNode(sb.toString()));
-            newNode.isLineEnd = true;
-        }
-    }
-
+    
     private int checkHeading(String line) {
         int level = getHeadingLevel(line);
 
@@ -219,5 +224,9 @@ public class MdParser {
 
         currentNode.addNode(new MdTextNode(sb.toString()));
         sb = new StringBuilder();
+    }
+
+    private boolean isInLinkFirstStage() {
+        return currentNode.type == MdNodeType.LINK && ((MdLinkNode) currentNode).stage == 1;
     }
 }
