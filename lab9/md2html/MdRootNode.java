@@ -5,4 +5,7 @@ public class MdRootNode extends MdNode {
         super();
         this.type = MdNodeType.ROOT;
     }
+
+    protected void writeHtml(StringBuilder sb, boolean isLast) {
+    }
 }

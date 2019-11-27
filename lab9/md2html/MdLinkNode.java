@@ -12,4 +12,14 @@ public class MdLinkNode extends MdNode {
         this.type = MdNodeType.LINK;
         url = new StringBuilder();
     }
+
+    protected void writeHtml(StringBuilder sb, boolean isLast) {
+        String elem = "a";
+        String attribute = "href='" + url + "'";
+        HtmlWriter.appendElement(sb, elem, attribute, this);
+
+        if (isLineEnd && !isLast) {
+            sb.append('\n');
+        }
+    }
 }

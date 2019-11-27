@@ -1,6 +1,15 @@
 package md2html;
 
+import java.util.*;
+
 public class MdStyleNode extends MdNode {
+    private static Map<MdStyleNodeType, String> styleNodesMapping = Map.of(
+        MdStyleNodeType.EMPHASIZED, "em",
+        MdStyleNodeType.STRONG, "strong",
+        MdStyleNodeType.STRIKE, "s",
+        MdStyleNodeType.CODE, "code"
+    );
+
     public MdStyleNodeType styleType;
 
     public MdStyleNode(MdStyleNodeType styleType) {
@@ -21,5 +30,14 @@ public class MdStyleNode extends MdNode {
         }
 
         return false;
+    }
+
+    protected void writeHtml(StringBuilder sb, boolean isLast) {
+        String elem = styleNodesMapping.get(styleType);
+        HtmlWriter.appendElement(sb, elem, this);
+
+        if (isLineEnd && (!isLast || isInLink())) {
+            sb.append('\n');
+        }
     }
 }

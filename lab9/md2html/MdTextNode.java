@@ -8,4 +8,12 @@ public class MdTextNode extends MdNode {
         this.type = MdNodeType.TEXT;
         this.text = text;
     }
+
+    protected void writeHtml(StringBuilder sb, boolean isLast) {
+        sb.append(text);
+
+        if (isLineEnd && !isLast) {
+            sb.append('\n');
+        }
+    }
 }

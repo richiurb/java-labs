@@ -5,7 +5,6 @@ import java.io.*;
 public class Md2Html {
     public static void main(String[] args) {
         MdParser parser = new MdParser();
-        Md2HtmlWriter md2html = new Md2HtmlWriter();
 
         try {
             CustomScanner sc = new CustomScanner(
@@ -20,7 +19,7 @@ public class Md2Html {
                     parser.parseLine(sc.nextLine());
                 }
 
-                writeHtml(args[1], md2html.getHtml(parser.getRoot()));
+                saveHtml(args[1], parser.getRoot().getHtml());
             } finally {
                 sc.close();
             }
@@ -33,7 +32,7 @@ public class Md2Html {
         }
     }
 
-    private static void writeHtml(String filepath, String html) {
+    private static void saveHtml(String filepath, String html) {
         try {
             BufferedWriter bw = new BufferedWriter(
                 new OutputStreamWriter(
