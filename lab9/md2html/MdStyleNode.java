@@ -8,4 +8,18 @@ public class MdStyleNode extends MdNode {
         this.type = MdNodeType.STYLE;
         this.styleType = styleType;
     }
+
+    public boolean isInLink() {
+        MdNode node = parent;
+
+        while (node.type != MdNodeType.ROOT) {
+            if (node.type == MdNodeType.LINK) {
+                return true;
+            }
+
+            node = node.parent;
+        }
+
+        return false;
+    }
 }

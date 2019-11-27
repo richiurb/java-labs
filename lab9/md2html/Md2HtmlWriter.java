@@ -10,8 +10,6 @@ public class Md2HtmlWriter {
         MdStyleNodeType.CODE, "code"
     );
 
-    boolean isInLink = false;
-
     public String getHtml(MdNode node) {
         StringBuilder sb = new StringBuilder();
 
@@ -33,7 +31,7 @@ public class Md2HtmlWriter {
                 String elem = styleNodesMapping.get(styleNode.styleType);
                 appendElement(sb, elem, child);
 
-                if (styleNode.isLineEnd && (isInLink || !isLast)) {
+                if (styleNode.isLineEnd && (!isLast || styleNode.isInLink())) {
                     sb.append('\n');
                 }
             } else if (child.type == MdNodeType.TEXT) {
@@ -48,9 +46,7 @@ public class Md2HtmlWriter {
                 String elem = "a";
                 String attribute = " href='" + linkNode.url + "'";
                 sb.append(getOpeningTag(elem + attribute));
-                isInLink = true;
                 sb.append(getHtml(child));
-                isInLink = false;
                 sb.append(getClosingTag(elem));
 
                 if (linkNode.isLineEnd && !isLast) {
