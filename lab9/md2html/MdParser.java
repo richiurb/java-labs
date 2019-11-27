@@ -11,8 +11,8 @@ public class MdParser {
     private int lineCharIndex;
     private StringBuilder sb;
 
-    private char[] controlCharacters = new char[] { '*', '_', '-', '`', '\\' };
-    private Map<String, MdStyleNodeType> styleNodesMapping = Map.of(
+    private static String controlCharacters = "*_-`\\";
+    private static Map<String, MdStyleNodeType> styleNodesMapping = Map.of(
         "*", MdStyleNodeType.EMPHASIZED,
         "_", MdStyleNodeType.EMPHASIZED,
         "**", MdStyleNodeType.STRONG,
@@ -21,7 +21,7 @@ public class MdParser {
         "`", MdStyleNodeType.CODE
     );
 
-    private Map<Character, String> htmlSymbolsMapping = Map.of(
+    private static Map<Character, String> htmlSymbolsMapping = Map.of(
         '\"', "&quot;",
         '<', "&lt;",
         '>', "&gt;",
@@ -73,12 +73,10 @@ public class MdParser {
             processNonControlCharacter(c);
         } else if (isInLinkFirstStage()) {
             sb.append(c);
+        } else if (c == '\\') {
+            processEscapeCharacter(c);
         } else {
-            if (c == '\\') {
-                processEscapeCharacter(c);
-            } else {
-                processStyleCharacter(c);
-            }
+            processStyleCharacter(c);
         }
     }
 
@@ -142,7 +140,7 @@ public class MdParser {
         int nextCharIndex = lineCharIndex + 1;
         char nextChar = nextCharIndex == line.length() ? 0 : line.charAt(nextCharIndex);
 
-        if (!(currentNode.type == MdNodeType.STYLE) && (nextChar == 0 || nextChar == ' ')) {
+        if (currentNode.type != MdNodeType.STYLE && (nextChar == 0 || nextChar == ' ')) {
             sb.append(c);
             return;
         }
@@ -161,7 +159,7 @@ public class MdParser {
 
         saveAndClearStringBuilder();
 
-        if (currentNode.type == MdNodeType.STYLE && ((MdStyleNode)currentNode).styleType == styleNodeType) {
+        if (currentNode.type == MdNodeType.STYLE && ((MdStyleNode) currentNode).styleType == styleNodeType) {
             // Processing end of the style node
             if (lineCharIndex == line.length() - 1) {
                 currentNode.isLineEnd = true;
@@ -196,25 +194,11 @@ public class MdParser {
             }
         }
 
-        if (endOfHeadingIndex == 0) {
-            return 0;
-        }
-
-        if (line.charAt(endOfHeadingIndex) == ' ') {
-            return endOfHeadingIndex;
-        }
-
-        return 0;
+        return endOfHeadingIndex == 0 || line.charAt(endOfHeadingIndex) != ' ' ? 0 : endOfHeadingIndex; 
     }
 
-    private boolean isControlChar(char character) {
-        for (char c : controlCharacters) {
-            if (character == c) {
-                return true;
-            }
-        }
-
-        return false;
+    private static boolean isControlChar(char c) {
+        return controlCharacters.indexOf(c) >= 0;
     }
 
     private void saveAndClearStringBuilder() {
@@ -223,7 +207,7 @@ public class MdParser {
         }
 
         currentNode.addNode(new MdTextNode(sb.toString()));
-        sb = new StringBuilder();
+        sb.setLength(0);
     }
 
     private boolean isInLinkFirstStage() {

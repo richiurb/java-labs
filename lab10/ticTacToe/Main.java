@@ -5,7 +5,7 @@ package ticTacToe;
  */
 public class Main {
     public static void main(String[] args) {
-        final Game game = new Game(false, new HumanPlayer(), new RandomPlayer());
+        final Game game = new Game(false, new HumanPlayer(), new SequentialPlayer());
         int result;
         do {
             result = game.play(new TicTacToeBoard());
