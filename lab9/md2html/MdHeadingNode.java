@@ -1,6 +1,7 @@
 package md2html;
 
 public class MdHeadingNode extends MdNode {
+    private final String htmlElement = "h";
     public int level;
 
     public MdHeadingNode(int level) {
@@ -10,8 +11,6 @@ public class MdHeadingNode extends MdNode {
     }
 
     protected void writeHtml(StringBuilder sb, boolean isLast) {
-        String elem = "h" + level;
-        HtmlWriter.appendElement(sb, elem, this);
-        sb.append('\n');
+        HtmlWriter.appendElement(sb, htmlElement + level, this);
     }
 }

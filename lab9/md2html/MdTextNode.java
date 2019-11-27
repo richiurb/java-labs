@@ -9,11 +9,12 @@ public class MdTextNode extends MdNode {
         this.text = text;
     }
 
+    @Override
+    protected boolean needNewLine(boolean isLast) {
+        return isLineEnd && !isLast;
+    }
+
     protected void writeHtml(StringBuilder sb, boolean isLast) {
         sb.append(text);
-
-        if (isLineEnd && !isLast) {
-            sb.append('\n');
-        }
     }
 }

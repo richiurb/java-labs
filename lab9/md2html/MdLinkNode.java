@@ -1,6 +1,7 @@
 package md2html;
 
 public class MdLinkNode extends MdNode {
+    private final String htmlElement = "a";
     public StringBuilder url;
 
     // Stage 0 - processing link text found in square brackets
@@ -13,13 +14,12 @@ public class MdLinkNode extends MdNode {
         url = new StringBuilder();
     }
 
-    protected void writeHtml(StringBuilder sb, boolean isLast) {
-        String elem = "a";
-        String attribute = "href='" + url + "'";
-        HtmlWriter.appendElement(sb, elem, attribute, this);
+    @Override
+    protected boolean needNewLine(boolean isLast) {
+        return isLineEnd && !isLast;
+    }
 
-        if (isLineEnd && !isLast) {
-            sb.append('\n');
-        }
+    protected void writeHtml(StringBuilder sb, boolean isLast) {
+        HtmlWriter.appendElement(sb, htmlElement, "href='" + url + "'", this);
     }
 }

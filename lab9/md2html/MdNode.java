@@ -26,9 +26,17 @@ public abstract class MdNode {
             boolean isLast = i == children.size() - 1;
 
             child.writeHtml(sb, isLast);
+
+            if (child.needNewLine(isLast)) {
+                sb.append('\n');
+            }
         }
 
         return sb.toString();
+    }
+
+    protected boolean needNewLine(boolean isLast) {
+        return true;
     }
 
     protected abstract void writeHtml(StringBuilder sb, boolean isLast);

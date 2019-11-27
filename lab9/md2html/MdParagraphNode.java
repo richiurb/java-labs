@@ -1,14 +1,14 @@
 package md2html;
 
 public class MdParagraphNode extends MdNode {
+    private final String htmlElement = "p";
+
     public MdParagraphNode() {
         super();
         this.type = MdNodeType.PARAGRAPH;
     }
 
     protected void writeHtml(StringBuilder sb, boolean isLast) {
-        String elem = "p";
-        HtmlWriter.appendElement(sb, elem, this);
-        sb.append('\n');
+        HtmlWriter.appendElement(sb, htmlElement, this);
     }
 }

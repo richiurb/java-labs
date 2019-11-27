@@ -32,12 +32,12 @@ public class MdStyleNode extends MdNode {
         return false;
     }
 
-    protected void writeHtml(StringBuilder sb, boolean isLast) {
-        String elem = styleNodesMapping.get(styleType);
-        HtmlWriter.appendElement(sb, elem, this);
+    @Override
+    protected boolean needNewLine(boolean isLast) {
+        return isLineEnd && (!isLast || isInLink());
+    }
 
-        if (isLineEnd && (!isLast || isInLink())) {
-            sb.append('\n');
-        }
+    protected void writeHtml(StringBuilder sb, boolean isLast) {
+        HtmlWriter.appendElement(sb, styleNodesMapping.get(styleType), this);
     }
 }
