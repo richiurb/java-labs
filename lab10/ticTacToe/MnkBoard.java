@@ -6,24 +6,33 @@ import java.util.Map;
 /**
  * @author Georgiy Korneev (kgeorgiy@kgeorgiy.info)
  */
-public class TicTacToeBoard implements Board, Position {
+public class MnkBoard implements Board, Position {
     private static final Map<Cell, Character> SYMBOLS = Map.of(
             Cell.X, 'X',
             Cell.O, 'O',
+            Cell.H, 'H',
+            Cell.B, 'B',
             Cell.E, '.'
     );
 
-    private final Cell[][] cells;
-    private Cell turn;
+    private static final Cell[] TURNS = new Cell[] { Cell.X, Cell.O, Cell.H, Cell.B };
 
-    public TicTacToeBoard() {
-        this.cells = new Cell[3][3];
+    private final Cell[][] cells;
+    private final int columns, rows, k;
+    private int turn;
+
+    public MnkBoard(final int columns, final int rows, final int k) {
+        this.columns = columns;
+        this.rows = rows;
+        this.k = k;
+
+        this.cells = new Cell[rows][columns];
 
         for (Cell[] row : cells) {
             Arrays.fill(row, Cell.E);
         }
-        
-        turn = Cell.X;
+
+        turn = 0;
     }
 
     @Override
@@ -34,7 +43,7 @@ public class TicTacToeBoard implements Board, Position {
     // Position interface
     @Override
     public Cell getCell() {
-        return turn;
+        return TURNS[turn];
     }
 
     @Override
@@ -49,16 +58,16 @@ public class TicTacToeBoard implements Board, Position {
         int inDiag2 = 0;
         int empty = 0;
 
-        for (int u = 0; u < 3; u++) {
+        for (int u = 0; u < rows; u++) {
             int inRow = 0;
             int inColumn = 0;
 
-            for (int v = 0; v < 3; v++) {
-                if (cells[u][v] == turn) {
+            for (int v = 0; v < columns; v++) {
+                if (cells[u][v] == TURNS[turn]) {
                     inRow++;
                 }
 
-                if (cells[v][u] == turn) {
+                if (cells[v][u] == TURNS[turn]) {
                     inColumn++;
                 }
 
@@ -67,20 +76,20 @@ public class TicTacToeBoard implements Board, Position {
                 }
             }
 
-            if (inRow == 3 || inColumn == 3) {
+            if (inRow == k || inColumn == k) {
                 return Result.WIN;
             }
 
-            if (cells[u][u] == turn) {
+            if (cells[u][u] == TURNS[turn]) {
                 inDiag1++;
             }
 
-            if (cells[u][2 - u] == turn) {
+            if (cells[u][columns - 1 - u] == TURNS[turn]) {
                 inDiag2++;
             }
         }
 
-        if (inDiag1 == 3 || inDiag2 == 3) {
+        if (inDiag1 == k || inDiag2 == k) {
             return Result.WIN;
         }
         
@@ -88,17 +97,17 @@ public class TicTacToeBoard implements Board, Position {
             return Result.DRAW;
         }
 
-        turn = turn == Cell.X ? Cell.O : Cell.X;
+        turn = turn == TURNS.length - 1 ? 0 : turn + 1;
         return Result.UNKNOWN;
     }
 
     // Position interface
     @Override
     public boolean isValid(final Move move) {
-        return 0 <= move.getRow() && move.getRow() < 3
-                && 0 <= move.getColumn() && move.getColumn() < 3
+        return 0 <= move.getRow() && move.getRow() < rows
+                && 0 <= move.getColumn() && move.getColumn() < columns
                 && cells[move.getRow()][move.getColumn()] == Cell.E
-                && turn == getCell(); // Что это такое?
+                && TURNS[turn] == getCell(); // Что это такое?
     }
 
     @Override
@@ -108,24 +117,28 @@ public class TicTacToeBoard implements Board, Position {
 
     @Override
     public int getRows() {
-        return 3;
+        return rows;
     }
 
     @Override
     public int getColumns() {
-        return 3;
+        return columns;
     }
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder(" 012");
+        final StringBuilder sb = new StringBuilder(" ");
+
+        for (int i = 0; i < columns; i++) {
+            sb.append(" " + i);
+        }
         
-        for (int r = 0; r < 3; r++) {
+        for (int r = 0; r < rows; r++) {
             sb.append("\n");
             sb.append(r);
 
-            for (int c = 0; c < 3; c++) {
-                sb.append(SYMBOLS.get(cells[r][c]));
+            for (int c = 0; c < columns; c++) {
+                sb.append(" " + SYMBOLS.get(cells[r][c]));
             }
         }
 
