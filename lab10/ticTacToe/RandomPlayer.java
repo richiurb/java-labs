@@ -1,6 +1,7 @@
 package ticTacToe;
 
 import java.util.Random;
+import java.util.function.Predicate;
 
 /**
  * @author Georgiy Korneev (kgeorgiy@kgeorgiy.info)
@@ -17,14 +18,14 @@ public class RandomPlayer implements Player {
     }
 
     @Override
-    public Move move(final Position position, final Cell cell) {
+    public Move move(int rows, int columns, Cell cell, Predicate<Move> isValid, Runnable toString) {
         while (true) {
-            int r = random.nextInt(position.getRows());
-            int c = random.nextInt(position.getColumns());
+            int r = random.nextInt(rows);
+            int c = random.nextInt(columns);
             
             final Move move = new Move(r, c, cell);
 
-            if (position.isValid(move)) {
+            if (isValid.test(move)) {
                 return move;
             }
         }

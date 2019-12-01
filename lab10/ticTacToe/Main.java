@@ -6,13 +6,11 @@ package ticTacToe;
 public class Main {
 
     // Добавить обработку ошибок ввода
-    // Проверка за О(k)
-    // Предотвратить жульничество (Board -> Position -> Board)
 
     public static void main(String[] args) {
         final Game game = new Game(
             true,
-            new RandomPlayer(),
+            new SequentialPlayer(),
             new RandomPlayer(),
             new RandomPlayer(),
             new RandomPlayer());
@@ -20,7 +18,7 @@ public class Main {
         int result;
 
         //do {
-            result = game.play(new MnkBoard(5, 5, 4));
+            result = game.play(new MnkBoard(4, 4, 3));
             System.out.println("Game result: " + result);
         //} while (result != 0);
     }

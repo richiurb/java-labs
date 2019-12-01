@@ -2,6 +2,7 @@ package ticTacToe;
 
 import java.io.PrintStream;
 import java.util.Scanner;
+import java.util.function.Predicate;
 
 /**
  * @author Georgiy Korneev (kgeorgiy@kgeorgiy.info)
@@ -20,16 +21,16 @@ public class HumanPlayer implements Player {
     }
 
     @Override
-    public Move move(final Position position, final Cell cell) {
+    public Move move(int rows, int columns, Cell cell, Predicate<Move> isValid, Runnable toString) {
         while (true) {
             out.println("Position");
-            out.println(position);
+            out.println(toString());
             out.println(cell + "'s move");
             out.println("Enter row and column");
 
             final Move move = new Move(in.nextInt(), in.nextInt(), cell);
 
-            if (position.isValid(move)) {
+            if (isValid.test(move)) {
                 return move;
             }
 
