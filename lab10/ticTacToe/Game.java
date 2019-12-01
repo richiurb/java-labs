@@ -51,8 +51,8 @@ public class Game {
             board.getRows(), 
             board.getColumns(),
             board.getCell(),
-            (m) -> board.isValid(m),
-            () -> board.toString());
+            board.toString(),
+            (m) -> board.isValid(m));
         final Result result = board.makeMove(move);
 
         log("Player " + no + " move: " + move);

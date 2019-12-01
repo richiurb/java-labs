@@ -10,9 +10,7 @@ public class Main {
     public static void main(String[] args) {
         final Game game = new Game(
             true,
-            new SequentialPlayer(),
-            new RandomPlayer(),
-            new RandomPlayer(),
+            new HumanPlayer(),
             new RandomPlayer());
 
         int result;
