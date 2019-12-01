@@ -40,12 +40,7 @@ public class MnkBoard implements Board {
     public Cell getCell() {
         return TURNS[turn];
     }
-
-    @Override
-    public Cell getCell(final int r, final int c) {
-        return cells[r][c];
-    }
-
+    
     @Override
     public int getRows() {
         return rows;
