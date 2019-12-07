@@ -1,7 +1,6 @@
 package ticTacToe;
 
 import java.io.PrintStream;
-import java.util.InputMismatchException;
 import java.util.Scanner;
 import java.util.function.Predicate;
 
@@ -23,24 +22,20 @@ public class HumanPlayer implements Player {
 
     @Override
     public Move move(int rows, int columns, Cell cell, String boardString, Predicate<Move> isValid) {
+        out.println("Position:");
+        out.println(boardString);
+        out.println(cell + "'s move");
+
         while (true) {
-            out.println("Position");
-            out.println(boardString);
-            out.println(cell + "'s move");
-            out.println("Enter row and column");
+            out.print("Enter row and column: ");
 
-            try {
-                final Move move = new Move(in.nextInt(), in.nextInt(), cell);
+            final Move move = new Move(in.nextInt(), in.nextInt(), cell);
 
-                if (isValid.test(move)) {
-                    return move;
-                }
-
-                out.println("Move " + move + " is invalid");
-            } catch (InputMismatchException ex) {
-                in.next();
-                out.println("Input is invalid");
+            if (isValid.test(move)) {
+                return move;
             }
+
+            out.println("Move " + move + " is invalid");
         }
     }
 }

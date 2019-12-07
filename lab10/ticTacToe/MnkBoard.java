@@ -18,13 +18,13 @@ public class MnkBoard implements Board {
     private static final Cell[] TURNS = new Cell[] { Cell.X, Cell.O, Cell.H, Cell.B };
 
     private final Cell[][] cells;
-    private final int columns, rows, k;
+    private final int rows, columns, k;
     private int turn;
     private int turnsCount;
 
-    public MnkBoard(final int columns, final int rows, final int k) {
-        this.columns = columns;
+    public MnkBoard(final int rows, final int columns, final int k) {
         this.rows = rows;
+        this.columns = columns;
         this.k = k;
 
         this.cells = new Cell[rows][columns];
@@ -52,7 +52,7 @@ public class MnkBoard implements Board {
     }
 
     @Override
-    public Result makeMove(final Move move) {
+    public Result makeMove(final Move move, final int playersCount) {
         if (!isValid(move)) {
             return Result.LOSE;
         }
@@ -72,7 +72,7 @@ public class MnkBoard implements Board {
             return Result.DRAW;
         }
 
-        changeTurn();
+        changeTurn(playersCount);
         return Result.UNKNOWN;
     }
 
@@ -81,7 +81,7 @@ public class MnkBoard implements Board {
         return 0 <= move.getRow() && move.getRow() < rows
                 && 0 <= move.getColumn() && move.getColumn() < columns
                 && cells[move.getRow()][move.getColumn()] == Cell.E
-                && TURNS[turn] == getCell(); // Что это такое?
+                && TURNS[turn] == move.getValue();
     }
 
     @Override
@@ -104,8 +104,8 @@ public class MnkBoard implements Board {
         return sb.toString();
     }
 
-    private void changeTurn() {
-        turn = turn == TURNS.length - 1 ? 0 : turn + 1;
+    private void changeTurn(int playersCount) {
+        turn = turn == playersCount - 1 ? 0 : turn + 1;
     }
 
     private Result leftToRightDiag(Move move) {

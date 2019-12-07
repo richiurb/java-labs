@@ -37,7 +37,7 @@ public class Game {
     public int play(Board board) {
         while (true) {
             for (int i = 0; i < players.length; i++) {
-                final int result = move(board, players[i], i + 1);
+                final int result = move(board, i);
 
                 if (result != -1) {
                     return result;
@@ -46,25 +46,26 @@ public class Game {
         }
     }
 
-    private int move(final Board board, final Player player, final int no) {
-        final Move move = player.move(
+    private int move(final Board board, final int playerIndex) {
+        final Move move = players[playerIndex].move(
             board.getRows(), 
             board.getColumns(),
             board.getCell(),
             board.toString(),
             (m) -> board.isValid(m));
 
-        final Result result = board.makeMove(move);
+        final Result result = board.makeMove(move, players.length);
+        final int playerNumber = playerIndex + 1;
 
-        log("Player " + no + " move: " + move);
+        log("Player " + playerNumber + " move: " + move);
         log("Position:\n" + board);
         
         if (result == Result.WIN) {
-            log("Player " + no + " won");
-            return no;
+            log("Player " + playerNumber + " won");
+            return playerNumber;
         } else if (result == Result.LOSE) {
-            log("Player " + no + " lose");
-            return players.length + 1 - no; // Что это такое?
+            log("Player " + playerNumber + " lose");
+            return players.length - playerIndex;
         } else if (result == Result.DRAW) {
             log("Draw");
             return 0;
