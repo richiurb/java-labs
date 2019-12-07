@@ -4,8 +4,7 @@ import java.io.*;
 
 public class Md2Html {
     public static void main(String[] args) {
-        MdParser parser = new MdParser();
-
+        MdRootNode root;
         try {
             CustomScanner sc = new CustomScanner(
                 new InputStreamReader(
@@ -14,12 +13,12 @@ public class Md2Html {
                     )
                 );
 
+                MdParser parser = new MdParser();
             try {
                 while (sc.hasNextLine()) {
                     parser.parseLine(sc.nextLine());
                 }
-
-                saveHtml(args[1], parser.getRoot().getHtml());
+                root = parser.getRoot();
             } finally {
                 sc.close();
             }
@@ -30,6 +29,7 @@ public class Md2Html {
         } catch (IOException ex) {
             System.err.println("Input is invalid!");
         }
+        saveHtml(args[1], root.getHtml());
     }
 
     private static void saveHtml(String filepath, String html) {
@@ -48,13 +48,10 @@ public class Md2Html {
             }
         } catch (FileNotFoundException ex) {
             System.err.println("Output file not found");
-            return;
         } catch (UnsupportedEncodingException ex) {
             System.err.println("UTF-8 encoding is not supported");
-            return;
         } catch (IOException ex) {
             System.err.println("Output is invalid!");
-            return;
         }
     }
 }

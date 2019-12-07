@@ -5,7 +5,7 @@ import java.util.*;
 public class MdParser {
     private final int MAX_HEADING_LEVEL = 6;
 
-    private MdNode rootNode;
+    private MdRootNode rootNode;
     private MdNode currentNode;
     private String line;
     private int lineCharIndex;
@@ -34,7 +34,7 @@ public class MdParser {
     }
 
     public MdRootNode getRoot() {
-        return (MdRootNode) rootNode;
+        return rootNode;
     }
 
     public void parseLine(String line) {
