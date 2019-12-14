@@ -10,23 +10,29 @@ public class Main {
     private static Scanner sc = new Scanner(System.in);
 
     public static void main(String[] args) {
-        final Game game = new Game(
-            true,
-            new RandomPlayer(),
-            new RandomPlayer(),
-            new RandomPlayer(),
-            new RandomPlayer());
+        try{
+            final Game game = new Game(
+                true,
+                new Player[] {
+                    new RandomPlayer(),
+                    new RandomPlayer(),
+                    new RandomPlayer(),
+                    new RandomPlayer()
+                });
 
-        int rows = inputInt("Input rows count", 3, Integer.MAX_VALUE);
-        int columns = inputInt("Input columns count", 3, Integer.MAX_VALUE);
-        int k = inputInt("Input K", 3, Math.min(rows, columns));
+            int rows = inputInt("Input rows count", 3, Integer.MAX_VALUE);
+            int columns = inputInt("Input columns count", 3, Integer.MAX_VALUE);
+            int k = inputInt("Input K", 3, Math.min(rows, columns));
 
-        int result;
+            int result;
 
-        //do {
-            result = game.play(new MnkBoard(rows, columns, k));
-            System.out.println("Game result: " + result);
-        //} while (result != 0);
+            //do {
+                result = game.play(new MnkBoard(rows, columns, k));
+                System.out.println("Game result: " + result);
+            //} while (result != 0);
+        } catch (Exception e) {
+            System.err.println(e);
+        }
     }
 
     public static int inputInt(String caption, int minValue, int maxValue) {

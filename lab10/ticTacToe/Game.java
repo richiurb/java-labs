@@ -9,29 +9,13 @@ public class Game {
 
     public Game(
         final boolean log,
-        final Player player1,
-        final Player player2) {
-            this.log = log;
-            this.players = new Player[] { player1, player2 };
-    }
-
-    public Game(
-        final boolean log,
-        final Player player1,
-        final Player player2,
-        final Player player3) {
-            this.log = log;
-            this.players = new Player[] { player1, player2, player3 };
-    }
-
-    public Game(
-        final boolean log,
-        final Player player1,
-        final Player player2,
-        final Player player3,
-        final Player player4) {
+        final Player[] players) throws Exception {
+        if (players.length < 2 || players.length > 4) {
+            throw new Exception("Unsupported number of players provided");
+        }
+        
         this.log = log;
-        this.players = new Player[] { player1, player2, player3, player4 };
+        this.players = players;
     }
 
     public int play(Board board) {
