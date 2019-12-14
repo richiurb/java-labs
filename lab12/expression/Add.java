@@ -12,11 +12,11 @@ public class Add extends BinaryExpression {
 
     @Override
     public int getPriority() {
-        return 1;
+        return 0;
     }
 
     @Override
-    protected char getOperationChar() {
-        return '+';
+    protected String getOperationSymbol() {
+        return "+";
     }
 }

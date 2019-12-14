@@ -11,17 +11,12 @@ public class Divide extends BinaryExpression {
     }
 
     @Override
-    public boolean isOrdered() {
-        return true;
-    }
-
-    @Override
     public int getPriority() {
         return 3;
     }
 
     @Override
-    protected char getOperationChar() {
-        return '/';
+    protected String getOperationSymbol() {
+        return "/";
     }
 }

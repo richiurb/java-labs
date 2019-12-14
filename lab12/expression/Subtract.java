@@ -11,17 +11,12 @@ public class Subtract extends BinaryExpression {
     }
 
     @Override
-    public boolean isOrdered() {
-        return true;
-    }
-
-    @Override
     public int getPriority() {
         return 1;
     }
 
     @Override
-    protected char getOperationChar() {
-        return '-';
+    protected String getOperationSymbol() {
+        return "-";
     }
 }
