@@ -1,7 +1,7 @@
 package expression;
 
-public class Add extends EvalExpression {
-    public Add(TripleExpression a, TripleExpression b) {
+public class Add extends BinaryExpression {
+    public Add(PrioritizedExpression a, PrioritizedExpression b) {
         super(a, b);
     }
 

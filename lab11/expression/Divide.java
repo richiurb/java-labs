@@ -1,7 +1,7 @@
 package expression;
 
 public class Divide extends BinaryExpression {
-    public Divide(TripleExpression a, TripleExpression b) {
+    public Divide(PrioritizedExpression a, PrioritizedExpression b) {
         super(a, b);
     }
 
@@ -10,7 +10,7 @@ public class Divide extends BinaryExpression {
     }
 
     public int getPriority() {
-        return 2;
+        return 3;
     }
 
     protected char getOperationChar() {

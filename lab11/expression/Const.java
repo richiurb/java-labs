@@ -1,6 +1,6 @@
 package expression;
 
-public class Const implements Expression, TripleExpression {
+public class Const implements PrioritizedExpression {
     private int value;
 
     public Const(int value) {
@@ -16,10 +16,14 @@ public class Const implements Expression, TripleExpression {
     }
 
     public int getPriority() {
-        return 3;
+        return 4;
     }
 
     public boolean equals(Object other) {
+        if (other == null || other.getClass() != getClass()) {
+            return false;
+        }
+        
         return ((Const)other).value == value;
     }
 

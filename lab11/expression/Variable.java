@@ -1,6 +1,6 @@
 package expression;
 
-public class Variable implements Expression, TripleExpression {
+public class Variable implements PrioritizedExpression {
     private String name;
 
     public Variable(String name) {
@@ -8,7 +8,7 @@ public class Variable implements Expression, TripleExpression {
     }
 
     public int evaluate(int x) {
-        return name == "x" ? x : 0;
+        return x;
     }
 
     public int evaluate(int x, int y, int z) {
@@ -25,10 +25,14 @@ public class Variable implements Expression, TripleExpression {
     }
 
     public int getPriority() {
-        return 3;
+        return 4;
     }
 
     public boolean equals(Object other) {
+        if (other == null || other.getClass() != getClass()) {
+            return false;
+        }
+
         return ((Variable)other).name == name;
     }
 

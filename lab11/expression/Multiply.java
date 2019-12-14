@@ -1,12 +1,12 @@
 package expression;
 
 public class Multiply extends BinaryExpression {
-    public Multiply(TripleExpression a, TripleExpression b) {
+    public Multiply(PrioritizedExpression a, PrioritizedExpression b) {
         super(a, b);
     }
 
     public int evaluateExpression(int val1, int val2) {
-        return val1 + val2;
+        return val1 * val2;
     }
 
     public int getPriority() {

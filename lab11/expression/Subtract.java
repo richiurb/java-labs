@@ -1,7 +1,7 @@
 package expression;
 
 public class Subtract extends BinaryExpression {
-    public Subtract(TripleExpression a, TripleExpression b) {
+    public Subtract(PrioritizedExpression a, PrioritizedExpression b) {
         super(a, b);
     }
 
