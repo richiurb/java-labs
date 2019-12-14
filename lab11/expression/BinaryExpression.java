@@ -25,6 +25,7 @@ public abstract class BinaryExpression implements PrioritizedExpression {
         return evaluate(x, y, 0);
     }
   
+    @Override
     public boolean equals(Object other) {
         if (other == null || other.getClass() != getClass()) {
             return false;
@@ -36,10 +37,12 @@ public abstract class BinaryExpression implements PrioritizedExpression {
             && otherExpr.b.equals(b);
     }
 
+    @Override
     public String toString() {
         return String.format("(%s %c %s)", a.toString(), getOperationChar(), b.toString());
     }
 
+    @Override
     public String toMiniString() {
         String str1 = getMiniString(a, -2);
         String str2 = getMiniString(b, 0);
@@ -47,6 +50,7 @@ public abstract class BinaryExpression implements PrioritizedExpression {
         return String.format("%s %c %s", str1, getOperationChar(), str2);
     }
 
+    @Override
     public int hashCode() {
         return toString().hashCode();
     }
@@ -56,7 +60,8 @@ public abstract class BinaryExpression implements PrioritizedExpression {
         int currentPriority = getPriority() + priorityShift;
 
         return expressionPriority < currentPriority
-            || (expressionPriority - 1 <= currentPriority && (expressionPriority == 1 || expressionPriority == 3)) 
+            || (expressionPriority - 1 <= currentPriority 
+                && (expressionPriority == 1 || expressionPriority == 3)) 
             ? String.format("(%s)", expr.toMiniString()) 
             : expr.toMiniString();
     }

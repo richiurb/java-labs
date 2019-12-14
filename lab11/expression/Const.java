@@ -1,5 +1,7 @@
 package expression;
 
+import java.util.Objects;
+
 public class Const implements PrioritizedExpression {
     private int value;
 
@@ -7,18 +9,22 @@ public class Const implements PrioritizedExpression {
         this.value = value;
     }
 
+    @Override
     public int evaluate(int x) {
         return value;
     }
 
+    @Override
     public int evaluate(int x, int y, int z) {
         return value;
     }
 
+    @Override
     public int getPriority() {
         return 4;
     }
 
+    @Override
     public boolean equals(Object other) {
         if (other == null || other.getClass() != getClass()) {
             return false;
@@ -27,11 +33,13 @@ public class Const implements PrioritizedExpression {
         return ((Const)other).value == value;
     }
 
+    @Override
     public String toString() {
         return Integer.toString(value);
     }
 
+    @Override
     public int hashCode() {
-        return value;
+        return Objects.hashCode(value);
     }
 }

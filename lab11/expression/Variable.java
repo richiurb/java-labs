@@ -7,10 +7,12 @@ public class Variable implements PrioritizedExpression {
         this.name = name;
     }
 
+    @Override
     public int evaluate(int x) {
         return x;
     }
 
+    @Override
     public int evaluate(int x, int y, int z) {
         switch (name) {
             case "x":
@@ -24,10 +26,12 @@ public class Variable implements PrioritizedExpression {
         }
     }
 
+    @Override
     public int getPriority() {
         return 4;
     }
 
+    @Override
     public boolean equals(Object other) {
         if (other == null || other.getClass() != getClass()) {
             return false;
@@ -36,10 +40,12 @@ public class Variable implements PrioritizedExpression {
         return ((Variable)other).name == name;
     }
 
+    @Override
     public String toString() {
         return name;
     }
 
+    @Override
     public int hashCode() {
         return name.hashCode();
     }
