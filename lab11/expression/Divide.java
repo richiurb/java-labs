@@ -17,11 +17,11 @@ public class Divide extends BinaryExpression {
 
     @Override
     public int getPriority() {
-        return 3;
+        return 2;
     }
 
     @Override
-    protected char getOperationChar() {
-        return '/';
+    protected String getOperationString() {
+        return "/";
     }
 }

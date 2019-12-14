@@ -20,11 +20,6 @@ public class Const implements CommonExpression {
     }
 
     @Override
-    public int getPriority() {
-        return 4;
-    }
-
-    @Override
     public boolean equals(Object other) {
         if (other == null || other.getClass() != getClass()) {
             return false;

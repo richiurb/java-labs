@@ -10,8 +10,12 @@ public abstract class BinaryExpression implements CommonExpression {
     }
 
     public abstract int getPriority();
-    protected abstract char getOperationChar();
+    protected abstract String getOperationString();
     protected abstract int evaluateExpression(int val1, int val2);
+
+    protected boolean isOrdered() {
+        return false;
+    }
 
     @Override
     public int evaluate(int x, int y, int z) {
@@ -37,23 +41,18 @@ public abstract class BinaryExpression implements CommonExpression {
 
     @Override
     public String toString() {
-        return String.format("(%s %c %s)", a.toString(), getOperationChar(), b.toString());
+        return String.format("(%s %s %s)", a.toString(), getOperationString(), b.toString());
     }
 
     @Override
     public String toMiniString() {
-        /*String str1 = getMiniString(a, -2);
-        String str2 = getMiniString(b, 0);*/
+        String str1 = getExpressionMiniString(a,
+            !(a instanceof BinaryExpression) || removeBracketsLeft((BinaryExpression) a));
 
-        String str1 = !removeLeftBrackets(a) 
-            ? String.format("(%s)", a.toMiniString()) 
-            : a.toMiniString();
-
-        String str2 = !removeRightBrackets(b) 
-            ? String.format("(%s)", b.toMiniString()) 
-            : b.toMiniString();
+        String str2 = getExpressionMiniString(b,
+            !(b instanceof BinaryExpression) || removeBracketsRight((BinaryExpression) b));
         
-        return String.format("%s %c %s", str1, getOperationChar(), str2);
+        return String.format("%s %s %s", str1, getOperationString(), str2);
     }
 
     @Override
@@ -61,35 +60,17 @@ public abstract class BinaryExpression implements CommonExpression {
         return toString().hashCode();
     }
 
-    private String getMiniString(CommonExpression expr, int priorityShift) {
-        int expressionPriority = expr.getPriority();
-        int currentPriority = getPriority() + priorityShift;
-
-        return expressionPriority < currentPriority
-            || (expressionPriority - 1 <= currentPriority && expr.isOrdered()) 
-            ? String.format("(%s)", expr.toMiniString()) 
-            : expr.toMiniString();
+    private String getExpressionMiniString(Expression expr, boolean removeBrackets) {
+        return removeBrackets ? expr.toMiniString() : String.format("(%s)", expr.toMiniString());
     }
 
-    private boolean removeLeftBrackets(CommonExpression expr) {
-        if (!(expr instanceof BinaryExpression)) {
-            return true;
-        }
-
-        return 
-            expr.getPriority() > getPriority()
-            || (expr.getPriority() == getPriority() && expr.isOrdered() == isOrdered())
-            || (expr.getPriority() == getPriority() && expr.isOrdered() && !isOrdered())
-            || (expr.getPriority() == getPriority() && !expr.isOrdered() && isOrdered());
+    private boolean removeBracketsLeft(BinaryExpression expr) {
+        return expr.getPriority() >= getPriority();
     }
 
-    private boolean removeRightBrackets(CommonExpression expr) {
-        if (!(expr instanceof BinaryExpression)) {
-            return true;
-        }
-
-        return 
-            (expr.getPriority() == getPriority() && !expr.isOrdered() && !isOrdered())
-            || (expr.getPriority() > getPriority() && expr.isOrdered());
+    private boolean removeBracketsRight(BinaryExpression expr) {
+        return expr.isOrdered()
+            ? expr.getPriority() > getPriority()
+            : expr.getPriority() == getPriority() && !isOrdered();
     }
 }

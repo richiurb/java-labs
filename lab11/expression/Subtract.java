@@ -21,7 +21,7 @@ public class Subtract extends BinaryExpression {
     }
 
     @Override
-    protected char getOperationChar() {
-        return '-';
+    protected String getOperationString() {
+        return "-";
     }
 }

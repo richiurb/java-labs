@@ -12,14 +12,11 @@ public class Multiply extends BinaryExpression {
 
     @Override
     public int getPriority() {
-        // This priority is equal to division priority because of:
-        // expected: 2 * (x / 1)
-        // actual: 2 * x / 1
-        return 3;
+        return 2;
     }
 
     @Override
-    protected char getOperationChar() {
-        return '*';
+    protected String getOperationString() {
+        return "*";
     }
 }
