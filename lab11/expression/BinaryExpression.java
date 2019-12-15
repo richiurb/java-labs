@@ -14,12 +14,9 @@ public abstract class BinaryExpression implements CommonExpression {
     protected abstract int evaluateExpression(int val1, int val2);
 
     protected boolean isOrdered() {
+        // Ordered is false by default. 
+        // True only for subtract and divide.
         return false;
-    }
-
-    @Override
-    public int evaluate(int x, int y, int z) {
-        return evaluateExpression(a.evaluate(x, y, z), b.evaluate(x, y, z));
     }
 
     @Override
@@ -28,15 +25,18 @@ public abstract class BinaryExpression implements CommonExpression {
     }
 
     @Override
+    public int evaluate(int x, int y, int z) {
+        return evaluateExpression(a.evaluate(x, y, z), b.evaluate(x, y, z));
+    }
+
+    @Override
     public boolean equals(Object other) {
         if (other == null || other.getClass() != getClass()) {
             return false;
         }
 
-        BinaryExpression otherExpr = (BinaryExpression)other;
-        
-        return otherExpr.a.equals(a)
-            && otherExpr.b.equals(b);
+        BinaryExpression otherExpr = (BinaryExpression) other;
+        return otherExpr.a.equals(a) && otherExpr.b.equals(b);
     }
 
     @Override
@@ -57,7 +57,11 @@ public abstract class BinaryExpression implements CommonExpression {
 
     @Override
     public int hashCode() {
-        return toString().hashCode();
+        int result = a.hashCode();
+        result = 31 * result + b.hashCode();
+        result = 31 * result + getOperationString().hashCode();
+
+        return result;
     }
 
     private String getExpressionMiniString(Expression expr, boolean removeBrackets) {

@@ -12,11 +12,11 @@ public class LeftShift extends BinaryExpression {
 
     @Override
     public int getPriority() {
-        return -1;
+        return 0;
     }
 
     @Override
-    protected String getOperationSymbol() {
+    protected String getOperationString() {
         return "<<";
     }
 }

@@ -7,16 +7,16 @@ public class RightShift extends BinaryExpression {
 
     @Override
     public int evaluateExpression(int val1, int val2) {
-        return val1 * val2;
+        return val1 >> val2;
     }
 
     @Override
     public int getPriority() {
-        return -1;
+        return 0;
     }
 
     @Override
-    protected String getOperationSymbol() {
+    protected String getOperationString() {
         return ">>";
     }
 }

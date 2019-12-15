@@ -1,7 +1,5 @@
 package expression;
 
-import java.util.Objects;
-
 public class Const implements CommonExpression {
     private int value;
 
@@ -35,6 +33,6 @@ public class Const implements CommonExpression {
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(value);
+        return value;
     }
 }

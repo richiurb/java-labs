@@ -16,7 +16,7 @@ public class Multiply extends BinaryExpression {
     }
 
     @Override
-    protected String getOperationSymbol() {
+    protected String getOperationString() {
         return "*";
     }
 }
