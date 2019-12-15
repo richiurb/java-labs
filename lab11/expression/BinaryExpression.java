@@ -21,7 +21,7 @@ public abstract class BinaryExpression implements CommonExpression {
 
     @Override
     public int evaluate(int x) {
-        return evaluate(x, 0, 0);
+        return evaluateExpression(a.evaluate(x), b.evaluate(x));
     }
 
     @Override

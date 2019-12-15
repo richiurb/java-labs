@@ -22,7 +22,8 @@ public class Variable implements CommonExpression {
             case "z":
                 return z;
             default:
-                return 0;
+                throw new IllegalArgumentException(
+                    String.format("Variable name %s is not supported", name));
         }
     }
 
