@@ -33,7 +33,7 @@ public class Variable implements CommonExpression {
             return false;
         }
 
-        return ((Variable)other).name == name;
+        return ((Variable) other).name == name;
     }
 
     @Override

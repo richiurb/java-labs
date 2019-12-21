@@ -18,7 +18,8 @@ public class Main {
                     new RandomPlayer(),
                     new RandomPlayer(),
                     new RandomPlayer()
-                });
+                }
+            );
 
             int rows = inputInt("Input rows count", 3, Integer.MAX_VALUE);
             int columns = inputInt("Input columns count", 3, Integer.MAX_VALUE);

@@ -9,7 +9,8 @@ public class Game {
 
     public Game(
         final boolean log,
-        final Player[] players) throws Exception {
+        final Player[] players
+    ) throws Exception {
         if (players.length < 2 || players.length > 4) {
             throw new Exception("Unsupported number of players provided");
         }
@@ -36,7 +37,8 @@ public class Game {
             board.getColumns(),
             board.getCell(),
             board.toString(),
-            (m) -> board.isValid(m));
+            board::isValid
+        );
 
         final Result result = board.makeMove(move, players.length);
         final int playerNumber = playerIndex + 1;

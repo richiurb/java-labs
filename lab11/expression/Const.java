@@ -1,6 +1,6 @@
 package expression;
 
-public class Const implements CommonExpression {
+public final class Const implements CommonExpression {
     private int value;
 
     public Const(int value) {
@@ -23,7 +23,7 @@ public class Const implements CommonExpression {
             return false;
         }
         
-        return ((Const)other).value == value;
+        return ((Const) other).value == value;
     }
 
     @Override
