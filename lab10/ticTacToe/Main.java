@@ -31,7 +31,7 @@ public class Main {
                 result = game.play(new MnkBoard(rows, columns, k));
                 System.out.println("Game result: " + result);
             //} while (result != 0);
-        } catch (Exception e) {
+        } catch (IllegalArgumentException e) {
             System.err.println(e);
         }
     }

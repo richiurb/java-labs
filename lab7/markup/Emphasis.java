@@ -2,7 +2,7 @@ package markup;
 
 import java.util.*;
 
-public class Emphasis extends ChildrenNode {
+public class Emphasis extends ContainerNode {
     public Emphasis(List<Node> children) {
         super(children);
     }

@@ -2,7 +2,7 @@ package markup;
 
 import java.util.*;
 
-public class UnorderedList extends ChildrenNode {
+public class UnorderedList extends ContainerNode {
     public UnorderedList(List<Node> children) {
         super(children);
     }

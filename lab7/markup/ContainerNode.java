@@ -2,8 +2,8 @@ package markup;
 
 import java.util.*;
 
-public abstract class ChildrenNode extends MultiNode {
-    protected ChildrenNode(List<Node> children) {
+public abstract class ContainerNode extends MultiNode {
+    protected ContainerNode(List<Node> children) {
         super(children);
     }
 
@@ -12,23 +12,25 @@ public abstract class ChildrenNode extends MultiNode {
 
     @Override
     public void toHtml(StringBuilder sb) {
-        sb.append(String.format("<%s>", getHtmlElement()));
+        String htmlElement = getHtmlElement();
+        sb.append(String.format("<%s>", htmlElement));
 
         for (Node node : children) {
             node.toHtml(sb);
         }
 
-        sb.append(String.format("</%s>", getHtmlElement()));
+        sb.append(String.format("</%s>", htmlElement));
     }
 
     @Override
     public void toMarkdown(StringBuilder sb) {
-        sb.append(getMarkdownElement());
+        String markdownElement = getMarkdownElement();
+        sb.append(markdownElement);
 
         for (Node node : children) {
             node.toMarkdown(sb);
         }
 
-        sb.append(getMarkdownElement());
+        sb.append(markdownElement);
     }
 }

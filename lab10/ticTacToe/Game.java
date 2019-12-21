@@ -10,9 +10,9 @@ public class Game {
     public Game(
         final boolean log,
         final Player[] players
-    ) throws Exception {
+    ) throws IllegalArgumentException {
         if (players.length < 2 || players.length > 4) {
-            throw new Exception("Unsupported number of players provided");
+            throw new IllegalArgumentException("Unsupported number of players provided");
         }
         
         this.log = log;

@@ -2,7 +2,7 @@ package markup;
 
 import java.util.*;
 
-public class Strikeout extends ChildrenNode {
+public class Strikeout extends ContainerNode {
     public Strikeout(List<Node> children) {
         super(children);
     }
